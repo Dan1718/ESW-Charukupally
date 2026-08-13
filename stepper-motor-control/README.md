@@ -22,6 +22,7 @@ The first task is to identify and justify the motor, driver, encoder, microcontr
 - [Requirements](01-requirements/requirements.md)
 - [Background: precision and resolution](02-background/precision-and-resolution.md)
 - [Component selection](03-exploration/component-selection/README.md)
+- [Component-selection resource review](03-exploration/component-selection/resource-review.md)
 - [System architecture](04-design/system-architecture.md)
 - [Experiment index](05-experiments/experiment-index.md)
 - [Implementation](06-implementation/README.md)

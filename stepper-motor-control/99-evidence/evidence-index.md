@@ -27,4 +27,15 @@ Every external resource used in the project should be linked from the relevant d
 - Used in: `02-background/precision-and-resolution.md`
 - Limitation: The discussion contains at least one incorrect or inconsistent numerical calculation. Its claims are not used without independent verification.
 
+### Supplied Research Batch
+
+- [Lin Engineering: Methods for Increasing Accuracy in Stepper Motors](https://www.linengineering.com/news/methods-for-increasing-accuracy-in-stepper-motors)
+- [Industrial Monitor Direct: Sub-Arcsecond Rotary Motion](https://industrialmonitordirect.com/it/blogs/knowledgebase/05-arcsecond-precision-rotary-motion-motor-encoder-design-guide)
+- [JKONGMOTOR: Improving Stepper Positioning Accuracy](https://www.jkongmotor.com/how-to-improve-positioning-accuracy-of-stepper-motors-in-industrial-equipment.html)
+- [iFuture Technology: TTB6600 Driver Listing](https://ifuturetech.org/product/ttb6600-stepper-motor-driver-controller-4a-942v-ttl-32-micro-step/)
+- [Arduino Forum: Gear Ratio and Pulley Discussion](https://forum.arduino.cc/t/what-gears-ratio-use-to-have-more-resolution-in-stepper-motors-laser-engraver/607247)
+- [Arduino Forum: Stepper Motor Basics](https://forum.arduino.cc/t/stepper-motor-basics/275223/2)
+- [ThomasNet: Encoder Buying Guide](https://www.thomasnet.com/articles/automation-electronics/types-of-encoders-a-thomasnet-buying-guide/) (blocked during review; pending)
+- [Texas Instruments: SLOA293A](https://www.ti.com/lit/an/sloa293a/sloa293a.pdf) (PDF pending direct review)
+
 No project-specific hardware evidence has been added yet.

@@ -21,11 +21,11 @@ Requirements are separated into confirmed requirements from the course brief and
 | REQ-08 | Target angular precision | Arc-second-level performance; exact numerical threshold to be confirmed |
 | REQ-09 | Target repeatability | Arc-second-level repeatability is desired; exact numerical threshold to be confirmed |
 | REQ-10 | Maximum operating speed | To be confirmed |
-| REQ-11 | Motor load and torque requirement | To be confirmed |
+| REQ-11 | Motor load and torque requirement | Low-load application; basic torque feasibility is required, but torque capacity is not the primary selection criterion |
 | REQ-12 | Angular operating range | To be confirmed |
 | REQ-13 | Control-loop sampling rate | To be determined |
 | REQ-14 | Supply voltage and current limit | To be determined |
-| REQ-15 | Approximate mechanical load | Approximately 200 g; torque and load geometry to be determined |
+| REQ-15 | Approximate mechanical load | Approximately 200 g; considered a low load for initial component selection |
 | REQ-16 | Mechanical reduction | Gearing is permitted if required to achieve the angular-resolution target |
 
 ## Requirement Interpretation

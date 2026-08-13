@@ -147,6 +147,8 @@ The NEMA 17 form factor is fixed by the project brief, but the exact motor may b
 - Gearing or other mechanical reduction is allowed.
 - The required angular range, speed, and exact load geometry remain unspecified. These details are deferred until the basic component choices and prototype arrangement are clearer.
 
+The approximately 200 g load is considered low for the initial design. The motor and driver only need sufficient torque to move and hold the load safely; maximizing torque is not a primary selection objective. Component selection should instead prioritize output-side angular resolution, encoder capability, feedback quality, backlash, repeatability, controllability, and ease of characterization.
+
 ## Feedback Requirement
 
 The system must use closed-loop feedback. A rotary encoder will measure the final geared output angle, and the controller will use that measurement to reduce the difference between the target and actual positions. The encoder resolution, interface, and mounting method remain open decisions.
