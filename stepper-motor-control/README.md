@@ -2,6 +2,8 @@
 
 Embedded System Workshop (EC3.202), Project 13.
 
+- [Project context and documentation rules](project-context.md)
+
 This project develops a closed-loop stepper-motor system for precise and repeatable angular motion. The system is expected to combine a microcontroller, NEMA 17 stepper motor, motor driver, and high-resolution rotary encoder.
 
 The repository is organized by project phase. Documentation and code are kept near the work they describe instead of being separated into unrelated top-level categories.

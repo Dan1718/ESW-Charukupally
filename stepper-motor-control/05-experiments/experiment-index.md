@@ -7,4 +7,4 @@
 | EXP-003 | Encoder validation | Verify direction, resolution, counting, and noise. | Planned | Pending |
 | EXP-004 | Open-loop baseline | Establish positioning performance without feedback. | Planned | Pending |
 | EXP-005 | Closed-loop controller | Evaluate error reduction using the selected controller. | Planned | Pending |
-| EXP-006 | Precision validation | Measure precision and repeatability independently. | Planned | Pending |
+| EXP-006 | Precision validation | Measure precision and repeatability independently against the 100-arc-second requirement and 10-arc-second stretch goal. | Planned | Pending |

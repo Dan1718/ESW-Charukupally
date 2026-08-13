@@ -10,4 +10,5 @@ This list will be populated after the available lab hardware and component speci
 | Microcontroller | Real-time step generation and encoder sampling | To be confirmed | 1 | Lab or procurement | Open |
 | Power supply | Voltage/current to be determined | To be confirmed | 1 | Lab or procurement | Open |
 | Mechanical coupling | Motor-to-encoder compatibility | To be confirmed | 1 | Lab or procurement | Open |
+| Fixed reduction stage | Synchronous timing belt, pulleys, tensioner, and output-shaft bearings; ratio to be determined | To be confirmed | 1 | Lab or procurement | Candidate |
 | Independent measurement tool | Accuracy suitable for validation | To be confirmed | 1 | Lab | Open |

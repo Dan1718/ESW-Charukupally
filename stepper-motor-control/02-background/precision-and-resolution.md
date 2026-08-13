@@ -26,6 +26,15 @@ At 32 microsteps without mechanical reduction:
 
 This is a theoretical command increment. It does not establish actual shaft accuracy.
 
+For a `0.9-degree` motor, the same calculation is:
+
+```text
+0.9 degrees = 3240 arc-seconds
+3240 / 32 = 101.25 arc-seconds per commanded microstep
+```
+
+Thus, a 0.9-degree motor at 32 microsteps and direct drive reaches approximately the strict 100-arcsecond command-resolution range. Because this project uses closed-loop output-shaft feedback, the controller can measure and correct the remaining target-versus-shaft error. This makes 100-arcsecond physical performance more plausible than open-loop microstepping alone, provided encoder resolution, control-loop bandwidth, noise, and tuning are sufficient. Closed loop still cannot remove encoder quantization, measurement error, motor torque limits, electrical noise, or mechanical disturbances. A 2:1 reduction would reduce the nominal command increment to approximately 50.625 arc-seconds, but would add transmission errors that must be measured.
+
 ## Factors That Limit Actual Accuracy
 
 - Microsteps may not divide the mechanical angle linearly.
@@ -36,9 +45,13 @@ This is a theoretical command increment. It does not establish actual shaft accu
 - Driver current ripple and electrical noise affect torque and feedback.
 - Thermal changes can alter mechanical and electrical behavior.
 
+These limitations are consistent with the manufacturer discussion from Lin Engineering, which explicitly distinguishes resolution from accuracy: “During microstepping, you are not necessarily increasing the accuracy, but you are increasing the resolution.” [Lin Engineering](https://www.linengineering.com/news/methods-for-increasing-accuracy-in-stepper-motors) (accessed 2026-08-13).
+
 ## Implication For This Project
 
 The rotary encoder and independent measurement method are essential. The encoder provides feedback for the controller, while the independent instrument is needed to validate the final angular performance. Microstepping should be treated as a motion-smoothness and command-resolution feature, not as proof of arc-second positioning accuracy.
+
+The same system-level distinction is emphasized by Industrial Monitor Direct: “The encoder determines ultimate system accuracy—motors and mechanics must follow the measurement, not dictate it.” [Industrial Monitor Direct](https://industrialmonitordirect.com/it/blogs/knowledgebase/05-arcsecond-precision-rotary-motion-motor-encoder-design-guide) (accessed 2026-08-13). This is treated as design guidance, not as a validated specification for our prototype.
 
 ## Reference Review
 

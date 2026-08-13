@@ -38,4 +38,14 @@ Every external resource used in the project should be linked from the relevant d
 - [ThomasNet: Encoder Buying Guide](https://www.thomasnet.com/articles/automation-electronics/types-of-encoders-a-thomasnet-buying-guide/) (blocked during review; pending)
 - [Texas Instruments: SLOA293A](https://www.ti.com/lit/an/sloa293a/sloa293a.pdf) (PDF pending direct review)
 
+## Where Sources Are Used
+
+- Lin Engineering: `02-background/precision-and-resolution.md` and `03-exploration/component-selection/README.md`, for the distinction between microstep resolution and physical accuracy, and for gearing tradeoffs.
+- Industrial Monitor Direct: `02-background/precision-and-resolution.md`, `03-exploration/component-selection/README.md`, and `04-design/system-architecture.md`, for load-side feedback and the system-level precision perspective.
+- JKONGMOTOR: `03-exploration/component-selection/README.md`, for mechanical-error, torque-margin, and system-level selection considerations.
+- iFuture Technology: `03-exploration/component-selection/resource-review.md`, for the preliminary TTB6600 candidate specifications only.
+- Arduino pulley discussion: `03-exploration/component-selection/README.md` and local pulley evidence under `99-evidence/resources/arduino-pulley-diagram/`.
+- Cloudy Nights: `02-background/precision-and-resolution.md`, for the informal resolution-calculation example and its limitations.
+- ThomasNet and Texas Instruments: not yet used for technical claims because retrieval/review is incomplete.
+
 No project-specific hardware evidence has been added yet.

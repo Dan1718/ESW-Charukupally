@@ -18,8 +18,8 @@ Requirements are separated into confirmed requirements from the course brief and
 
 | ID | Parameter | Current value |
 | --- | --- | --- |
-| REQ-08 | Target angular precision | Arc-second-level performance; exact numerical threshold to be confirmed |
-| REQ-09 | Target repeatability | Arc-second-level repeatability is desired; exact numerical threshold to be confirmed |
+| REQ-08 | Target angular precision | Strict goal: demonstrate performance within 100 arc-seconds at the final geared output shaft. Stretch goal: approximately 10 arc-seconds |
+| REQ-09 | Target repeatability | Strict benchmark: 95% of settled results within +/- 50 arc-seconds. Stretch goal: 95% within +/- 5 arc-seconds; bidirectional hysteresis reported separately |
 | REQ-10 | Maximum operating speed | To be confirmed |
 | REQ-11 | Motor load and torque requirement | Low-load application; basic torque feasibility is required, but torque capacity is not the primary selection criterion |
 | REQ-12 | Angular operating range | To be confirmed |
