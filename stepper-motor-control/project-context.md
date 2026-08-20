@@ -52,6 +52,7 @@ The root `README.md` is the entry point and links to the main documents.
 
 - This conversation is part of the project context.
 - Every technical requirement, correction, decision, benchmark target, assumption, and limitation stated during project discussions must be patched into the relevant project document. Chat-only decisions are not considered recorded.
+- Decisions must be traceable over time. When a later decision replaces, narrows, or reverses an earlier decision, record the sequence, the original choice, the newly discovered problem or evidence, and the reason for the change. Do not silently overwrite the earlier rationale.
 - Relevant technical discussion, design decisions, assumptions, alternatives, tradeoffs, questions, and corrections must be added to the applicable project document.
 - Decisions are recorded where they apply, not in a separate generic decision log.
 - The chronological project log records when something happened; the relevant design or exploration document records the technical reasoning.

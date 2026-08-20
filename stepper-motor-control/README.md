@@ -30,6 +30,7 @@ The first task is to identify and justify the motor, driver, encoder, microcontr
 - [Implementation](06-implementation/README.md)
 - [Project log](07-project-log/chronological-lab-log.md)
 - [Evidence index](99-evidence/evidence-index.md)
+- [Consolidated LaTeX report](08-report/precision-stepper-report.tex)
 
 ## Source Material
 

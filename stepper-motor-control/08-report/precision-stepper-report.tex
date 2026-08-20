@@ -1,0 +1,218 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=25mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+\title{Closed-Loop Stepper Control for Precise Angular Motion}
+\author{Daniel Vincent \and Saketh Naga Sibyala \\ Suryansh Reddy Charukupally \and Ashwin Hari}
+\date{Embedded System Workshop (EC3.202)\\\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This report defines the current design and verification plan for a closed-loop NEMA 17 stepper-motor system for precise angular motion. The strict project goal is to demonstrate performance within 100 arc-seconds at the final output shaft. Approximately 10 arc-seconds is a stretch goal. The report distinguishes nominal command resolution from physical accuracy and repeatability, and records the reasoning behind the current motor, feedback, and mechanical-reduction direction. Hardware selections and performance claims remain provisional until supported by datasheets and measurements.
+\end{abstract}
+
+\tableofcontents
+
+\section{Project Scope}
+
+The system combines a microcontroller, motor driver, NEMA 17 stepper motor, rotary encoder, and mechanical output arrangement. The controller commands the motor, measures the physical output angle, estimates target error, and corrects the command in closed loop. The output-side encoder is intended to measure the final shaft rather than only the motor shaft, so transmission errors are visible to the controller.
+
+The initial scope includes component selection, electrical integration, open-loop motion generation, closed-loop control, noise analysis, calibration, and independent precision validation. Cloud connectivity, field deployment, and a final choice between PI, PID, FOC, or another controller are outside the initial scope.
+
+\section{Requirements and Definitions}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{p{0.18\linewidth}p{0.68\linewidth}}
+\toprule
+\textbf{ID} & \textbf{Requirement} \\
+\midrule
+REQ-01--REQ-07 & Microcontroller control of a NEMA 17 through a driver; fine open-loop motion; high-resolution rotary feedback; continuous angle tracking; closed-loop error reduction; noise analysis; and independent precision validation. \\
+REQ-08 & Strict goal: demonstrate maximum static error within 100 arc-seconds at the final output shaft. Stretch goal: approximately 10 arc-seconds. \\
+REQ-09 & Strict repeatability benchmark: 95 percent of settled results within +/-50 arc-seconds. Stretch goal: 95 percent within +/-5 arc-seconds. Bidirectional hysteresis is reported separately. \\
+REQ-11, REQ-15 & Expected load is approximately 200 g. Torque is a feasibility constraint, not the primary optimization objective. \\
+REQ-16 & Mechanical reduction is permitted if needed to achieve the angular-resolution target. \\
+\bottomrule
+\end{tabular}
+\caption{Current requirements. Exact speed, range, sampling rate, and electrical limits remain open.}
+\end{table}
+
+The terms are kept separate:
+\begin{description}[leftmargin=25mm]
+  \item[Resolution] Smallest commanded increment.
+  \item[Accuracy] Difference between commanded angle and true measured angle.
+  \item[Precision] Spread of repeated results.
+  \item[Repeatability] Agreement of results under repeated, defined approaches.
+\end{description}
+
+Microstep resolution alone is not evidence of accuracy. Lin Engineering explicitly distinguishes increased resolution from increased accuracy during microstepping \cite{lin}.
+
+\section{Architecture}
+
+The current architecture is:
+
+\begin{verbatim}
+Target angle -> microcontroller -> motor driver -> NEMA 17 -> output shaft
+                    ^                                      |
+                    |                                      v
+                    +----------- output rotary encoder ---+
+\end{verbatim}
+
+The encoder is closed-loop feedback, not the independent validation instrument. The independent instrument is needed because using the same encoder for control and reported error would not provide independent evidence. The output-side measurement direction is consistent with system-level guidance that the load-side result should determine the accuracy claim \cite{industrial}.
+
+The final design must specify the motor, driver, encoder, microcontroller, power path, bearings, shaft coupling, transmission, and independent measurement method. No exact part number is final at this stage.
+
+\section{Angular Resolution Feasibility}
+
+For motor step angle $\theta_s$, microstep factor $M$, and total reduction $R$,
+
+\begin{equation}
+\Delta\theta_{cmd}=\frac{\theta_s}{M R}.
+\end{equation}
+
+For a 1.8-degree motor at 32 microsteps,
+
+\begin{equation}
+\frac{1.8\times3600}{32}=202.5\text{ arc-seconds per nominal command}.
+\end{equation}
+
+For a 0.9-degree motor at 32 microsteps,
+
+\begin{equation}
+\frac{0.9\times3600}{32}=101.25\text{ arc-seconds per nominal command}.
+\end{equation}
+
+Therefore, a 0.9-degree motor at 32 microsteps and direct drive is a plausible closed-loop baseline for the 100-arcsecond requirement, but it has almost no nominal resolution margin. The encoder and controller can correct measured target-to-shaft error, but cannot eliminate encoder quantization, measurement error, motor torque limits, current-control error, noise, settling error, or mechanical disturbances.
+
+A 2:1 reduction with the same 0.9-degree motor gives approximately 50.625 arc-seconds per nominal command. This creates useful margin below 100 arc-seconds. A 20:1 reduction with a 1.8-degree motor gives approximately 10.125 arc-seconds nominally, but the extra transmission stages and their errors may be more damaging than the resolution benefit. These calculations follow the general step/reduction relationship, while informal numerical examples must be independently recalculated before use \cite{cloudynights}.
+
+The encoder must also be checked independently:
+
+\begin{equation}
+\Delta\theta_{enc}=\frac{1,296,000}{\text{counts per revolution}}\text{ arc-seconds per count}.
+\end{equation}
+
+At least 129,600 counts per revolution gives a nominal 10-arcsecond count spacing. This is only a quantization check, not an accuracy claim.
+
+\section{Decision History and Current Mechanical Direction}
+
+The project records decisions in time order so that later changes do not erase earlier reasoning.
+
+\begin{enumerate}
+  \item The initial concept allowed gearing and placed the encoder on the output shaft because output-side feedback must observe transmission error.
+  \item Planetary and harmonic gearboxes were considered. Planetary units are compact and available, but their commonly stated arc-minute backlash can exceed the 100-arcsecond requirement. Harmonic units can provide lower backlash, but cost, cyclic error, torsional compliance, and availability remain concerns.
+  \item A synchronous timing-belt pulley stage was identified as a low-cost fixed-ratio alternative. A toothed belt does not normally slip like a friction transmission, but belt elasticity, tooth clearance, tension, pulley eccentricity, runout, and shaft compliance must be measured \cite{arduino}.
+  \item A continuously variable transmission was considered for changing the ratio under different loads. It was not selected for the first precision prototype because slip, instantaneous-ratio uncertainty, changing stiffness, actuator backlash, and recalibration would complicate the angular error budget. The expected load is low, so torque adaptation is not worth making the precision problem harder.
+  \item Direct drive was then treated as a low-transmission-error baseline, not as a guaranteed route to arc-second accuracy. With a standard 0.9-degree motor at 32 microsteps it is approximately 101.25 arc-seconds nominally, so it provides little margin.
+  \item The current direction is to test the direct-drive closed-loop baseline and investigate a small fixed synchronous belt reduction, initially around 2:1, if additional margin is needed. The reduction is accepted only if measured backlash, hysteresis, runout, and compliance improve the total output error budget.
+\end{enumerate}
+
+The present mechanical priority order is: backlash and hysteresis, stiffness and compliance, runout and eccentricity, repeatability, thermal stability, command resolution, and only then torque beyond the amount needed for safe motion. Gearing is not justified merely by torque multiplication.
+
+\section{Mechanical Options}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{p{0.20\linewidth}p{0.29\linewidth}p{0.37\linewidth}}
+\toprule
+\textbf{Option} & \textbf{Useful property} & \textbf{Precision concern} \\
+\midrule
+Direct drive & No transmission backlash or ratio error. & Native step angle, cogging, torque ripple, and microstep nonlinearity remain at the output. \\
+Timing-belt pulley & Fixed known ratio, low cost, inspectable, no normal tooth slip. & Elastic angular deflection, tooth clearance, tension variation, pulley runout, shaft compliance. \\
+Harmonic/strain-wave & Potentially low backlash and high reduction. & Cyclic error, torsional compliance, preload dependence, cost, and sourcing. \\
+Planetary & Fixed ratio, compact, available. & Arc-minute backlash may exceed the 100-arcsecond goal; load-dependent hysteresis. \\
+CVT & Variable speed/ratio. & Slip or ratio uncertainty, changing compliance, actuator repeatability, and recalibration. \\
+\bottomrule
+\end{tabular}
+\caption{Relevant mechanical alternatives.}
+\end{table}
+
+The first mechanical prototype should use either direct drive for the baseline or a single fixed synchronous belt stage for a reduced-drive comparison. Multiple reduction stages should be avoided initially because each stage adds tolerance, compliance, and error sources.
+
+\section{Component Decisions}
+
+\subsection{Motor}
+The NEMA 17 form factor is fixed by the project brief. A 0.9-degree step angle is preferred for the initial precision comparison because it gives approximately 101.25 arc-seconds at 32 microsteps without a gearbox. The exact motor remains open until step-angle accuracy, current, torque feasibility, thermal behaviour, and availability are verified.
+
+\subsection{Driver}
+The driver must support the motor current, supply voltage, step/direction timing, selected microstep setting, and sufficiently stable current regulation. A driver listing is not enough to establish microstep linearity or physical accuracy. The exact driver remains open pending an official datasheet and bench test.
+
+\subsection{Encoder}
+The encoder must be mounted on the final output shaft and provide enough counts, update rate, signal quality, and mechanical accuracy for the chosen target. Encoder resolution must be compared with both the 100-arcsecond strict goal and the 10-arcsecond stretch goal. Its result is used for control, while an independent instrument validates the final claim.
+
+\subsection{Microcontroller and Control}
+The microcontroller must generate deterministic motor commands, sample or decode the encoder, calculate angular error, and run the closed-loop controller at a documented rate. Controller type and gains remain open. Noise, missed steps, resonance, and thermal effects must be tested rather than assumed away.
+
+\subsection{Mechanical Hardware}
+The preliminary reduced-drive bill of materials includes a synchronous timing belt, motor and output pulleys, tensioning method, rigid output-shaft support, bearings, and a low-error encoder coupling. The output pulley should not use the motor bearing as the only support for belt load.
+
+\section{Verification Benchmark}
+
+The benchmark measures the physical final output shaft using an independent reference. A calibrated autocollimator, rotary angle calibrator, or angular interferometer is suitable. The preferred reference uncertainty is 2 arc-seconds or less for a credible stretch-goal claim. If no independent instrument is available, the result must be called encoder-based characterization rather than independent accuracy validation.
+
+The test sequence is:
+\begin{enumerate}
+  \item Warm the motor, driver, mechanics, and encoder using documented conditions.
+  \item Run at least 11 target positions over the intended range, including zero and end regions. Approach each target from a defined direction, wait a fixed settling time, and repeat the grid at least five times.
+  \item Repeat selected targets from both directions at least ten times to measure repeatability, hysteresis, and lost motion.
+  \item Run a small-step staircase using 2, 5, 10, 20, 50, and 100 arc-second commands, with at least 20 trials per step where practical.
+  \item Hold selected positions for at least 30 minutes to measure drift, noise, and temperature correlation.
+\end{enumerate}
+
+For target $i$,
+
+\begin{equation}
+e_i=\theta_{reference,i}-\theta_{commanded,i}.
+\end{equation}
+
+Report maximum absolute error, mean error, standard deviation, repeatability range, bidirectional hysteresis, drift, and the combined uncertainty budget. The strict benchmark is maximum absolute error no greater than 100 arc-seconds. The stretch result is approximately 10 arc-seconds, subject to substantially smaller measurement uncertainty.
+
+\section{Evidence and Decision Status}
+
+The final report must preserve raw timestamped command, encoder, and independent-reference data; instrument model and calibration details; mechanical setup drawings or photographs; firmware version; controller configuration; environmental conditions; and the analysis script or spreadsheet. Excluded trials must have a stated reason.
+
+Current status:
+\begin{itemize}
+  \item Requirements: defined provisionally; speed, range, sampling rate, and electrical limits remain open.
+  \item Architecture: output-side closed-loop feedback selected as the design direction.
+  \item Mechanical system: direct-drive baseline and approximately 2:1 fixed timing-belt comparison under consideration.
+  \item Exact components: not yet selected.
+  \item Experimental results: none yet available.
+\end{itemize}
+
+\begin{thebibliography}{9}
+
+\bibitem{lin}
+Lin Engineering, ``Methods for Increasing Accuracy in Stepper Motors,''
+\url{https://www.linengineering.com/news/methods-for-increasing-accuracy-in-stepper-motors}, accessed 2026-08-13.
+
+\bibitem{industrial}
+Tom Garrett, Industrial Monitor Direct, ``Sub-Arcsecond Rotary Motion: Precision Motor \& Encoder Selection,''
+\url{https://industrialmonitordirect.com/it/blogs/knowledgebase/05-arcsecond-precision-rotary-motion-motor-encoder-design-guide}, accessed 2026-08-13.
+
+\bibitem{jkong}
+JKONGMOTOR, ``How To Improve Positioning Accuracy of Stepper Motors in Industrial Equipment,''
+\url{https://www.jkongmotor.com/how-to-improve-positioning-accuracy-of-stepper-motors-in-industrial-equipment.html}, accessed 2026-08-13.
+
+\bibitem{arduino}
+Arduino Forum, ``What gears ratio use to have more resolution in stepper motors, laser engraver?,''
+\url{https://forum.arduino.cc/t/what-gears-ratio-use-to-have-more-resolution-in-stepper-motors-laser-engraver/607247}, accessed 2026-08-13. Informal concept reference; pulley diagrams are preserved in the project evidence directory.
+
+\bibitem{cloudynights}
+Cloudy Nights, ``Steppers and resolution,'' topic 739690,
+\url{https://www.cloudynights.com/forums/topic/739690-steppers-and-resolution/}, accessed 2026-08-13. Informal reference; all numerical examples are independently recalculated in this report.
+
+\end{thebibliography}
+
+\end{document}
