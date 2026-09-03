@@ -37,6 +37,9 @@ This architecture follows the supplied system-level guidance that the encoder sh
 - **Preferred improvement:** Investigate a small fixed ratio, initially around 2:1, to move the nominal command increment toward 50.625 arc-seconds. Accept the reduction only if measured backlash, hysteresis, runout, and compliance improve the total output error budget rather than making it worse.
 - **Alternatives:** Harmonic/strain-wave, planetary, cycloidal, worm, and direct drive are retained for comparison. A variable-ratio CVT is an exploratory option rather than the baseline precision transmission.
 - **Constraint:** The transmission must be evaluated for backlash, elastic compliance, pulley/shaft runout, tension variation, thermal drift, and load-dependent error.
+- **Control implication:** Closed-loop backlash handling may use directional approach, take-up motion, a transmission-state estimate, and a calibrated hysteresis map. These methods require output-side encoder data and must be validated independently in both directions.
+- **Adaptive-control extension:** After the deterministic loop is stable, small pulse bursts may nudge the output while the encoder measures the response. An ML or adaptive model may predict pulse-burst size or feed-forward correction from angle, direction, reversal history, encoder error, temperature, and load. The deterministic controller remains the safety and stability layer.
+- **ML target:** The first learned model should predict a bounded residual correction, backlash take-up pulse count, or confidence value, not replace the full motor controller. Begin with an interpretable lookup table or small regression model and compare it against a fixed compensation baseline.
 - **Status:** Preliminary direction; motor capability, ratio, packaging, and measured transmission error remain open. Torque is only a feasibility check.
 
 Further comparison is recorded in [`mechanical-reduction-options.md`](mechanical-reduction-options.md).

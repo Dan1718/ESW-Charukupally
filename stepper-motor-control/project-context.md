@@ -43,6 +43,7 @@ stepper-motor-control/
 ├── 05-experiments/                 Test plans, procedures, and results
 ├── 06-implementation/              Firmware, analysis, libraries, and tests
 ├── 07-project-log/                 Chronological progress and meeting record
+├── 08-report/                      Consolidated LaTeX report and literature review
 └── 99-evidence/                    Raw data, images, diagrams, and source index
 ```
 
@@ -72,3 +73,7 @@ The root `README.md` is the entry point and links to the main documents.
 - Resolution, accuracy, precision, and repeatability must be treated as distinct properties.
 - Microstepping alone must not be treated as proof of physical angular accuracy.
 - Selection should prioritize output-side measurement, feedback quality, backlash, repeatability, controllability, and characterization.
+
+## Basic Prototype Support
+
+The first bench prototype will also require breadboards, jumper wires, suitable motor/power wiring, screw terminals, a current-limited bench supply, bypass capacitors, basic protection, mechanical mounting hardware, and measurement/debugging equipment. High-current motor paths must not rely on solderless breadboard contacts.

@@ -85,3 +85,31 @@ Cloudy Nights forum discussion, “Steppers and resolution,” topic 739690, htt
 - Driver microstepping settings must be recorded, but not used alone to claim accuracy.
 - The mechanical transmission ratio must be included in the resolution and error budget.
 - Component selection must consider torque and repeatability, not only the smallest nominal step.
+
+## What Closed-Loop Accuracy Looks Like Without Reduction
+
+Closed-loop control does not provide a fixed accuracy simply because feedback is present. For a direct-drive motor, the encoder and mechanics determine the achievable result.
+
+For an encoder producing `N` usable counts per revolution at the measured shaft:
+
+```text
+encoder count angle = 360 degrees / N
+                     = 1,296,000 arc-seconds / N
+```
+
+Illustrative ideal quantization values are:
+
+| Usable counts per revolution | Ideal count spacing |
+| ---: | ---: |
+| 1,000 | 1,296 arc-seconds |
+| 4,000 | 324 arc-seconds |
+| 10,000 | 129.6 arc-seconds |
+| 40,000 | 32.4 arc-seconds |
+| 100,000 | 12.96 arc-seconds |
+| 1,296,000 | 1 arc-second |
+
+These are resolution values, not accuracy values. Encoder interpolation, quantization, electrical noise, shaft eccentricity, bearing runout, motor torque ripple, structural compliance, controller sampling, and settling behavior can all make the actual error larger. A 1,000-line incremental encoder may provide 4,000 quadrature counts per revolution if all four edges are used, but that does not mean the physical shaft is accurate to 324 arc-seconds.
+
+Closed-loop feedback can detect and correct missed steps, load disturbances, and some repeatable errors. It cannot automatically remove backlash, encoder mounting error, output-shaft runout, or errors that are below the feedback system's effective measurement capability. This is why the Lin Engineering source warns: “During microstepping, you are not necessarily increasing the accuracy, but you are increasing the resolution.” [Lin Engineering](https://www.linengineering.com/news/methods-for-increasing-accuracy-in-stepper-motors) (accessed 2026-08-13).
+
+For our project, an unreduced standard NEMA 17 with a common low-resolution encoder should therefore not be assumed to achieve arc-second-level output accuracy. We need an encoder with sufficiently fine output-shaft measurement resolution and verified accuracy, plus a mechanical and control design that can use it.

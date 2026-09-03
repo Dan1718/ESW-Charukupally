@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Angular Motion Controller</title>
+<style>
+:root{font-family:system-ui,sans-serif;color:#e9eef5;background:#10151d}body{max-width:1000px;margin:auto;padding:28px}h1{font-size:clamp(2rem,5vw,4rem);margin:0 0 8px;letter-spacing:-.06em}.sub{color:#8794a5}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0}.card{background:#19212c;border:1px solid #2c3949;border-radius:14px;padding:18px}.label{color:#91a0b2;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em}.value{font-size:2rem;margin-top:8px}.accent{color:#71e0b0}.warn{color:#ffbe72}.danger{color:#ff7187}form{display:flex;gap:10px;flex-wrap:wrap}input,button{font:inherit;border-radius:9px;padding:12px 14px;border:1px solid #3c4a5c;background:#111821;color:inherit}input{width:150px}button{cursor:pointer;background:#71e0b0;color:#10151d;font-weight:700}button.secondary{background:#2a3645;color:#e9eef5}.status{margin:15px 0;padding:12px;border-radius:8px;background:#202b38}.chart{width:100%;height:230px;background:#111821;border-radius:8px}.small{color:#91a0b2;font-size:.85rem}@media(max-width:650px){body{padding:18px}.grid{grid-template-columns:1fr 1fr}.value{font-size:1.5rem}}
+</style></head>
+<body>
+<p class="sub">ESP32 / CLOSED-LOOP ANGULAR CONTROL</p><h1>Motion console</h1>
+<div id="status" class="status">Connecting...</div>
+<div class="grid"><div class="card"><div class="label">Actual angle</div><div id="actual" class="value accent">--</div></div><div class="card"><div class="label">Target angle</div><div id="target" class="value">--</div></div><div class="card"><div class="label">Position error</div><div id="error" class="value">--</div></div></div>
+<div class="card"><form id="move"><input id="angle" type="number" step="0.001" min="0" max="360" placeholder="Target angle"><button>Move to angle</button><button type="button" class="secondary" onclick="post('/api/stop')">Stop</button><button type="button" class="secondary" onclick="post('/api/reset-zero')">Reset zero</button><button type="button" class="secondary" onclick="post('/api/toggle-enable')">Enable / disable</button><button type="button" class="secondary" onclick="post('/api/clear-fault')">Clear fault</button></form><p class="small">Angles are degrees. The controller uses the shortest path and displays live feedback.</p></div>
+<div class="card" style="margin-top:14px"><div class="label">Live position history</div><canvas id="chart" class="chart"></canvas><p class="small">Green: actual position · blue: target position · red: error</p></div>
+<script>
+const history=[];const $=id=>document.getElementById(id);function fmt(v){return `${v.toFixed(3)}° (${Math.floor(v)}° ${Math.floor((v%1)*60)}' ${(((v%1)*60)%1*60).toFixed(1)}")`}
+async function post(url,body){await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});refresh()}
+$("move").onsubmit=e=>{e.preventDefault();post('/api/move',{target:Number($("angle").value)})};async function refresh(){try{const s=await (await fetch('/api/status')).json();$("actual").textContent=fmt(s.actual);$("target").textContent=fmt(s.target);$("error").textContent=`${s.error.toFixed(3)}°`;$("error").className='value '+(Math.abs(s.error)>.1?'warn':'accent');$("status").textContent=s.fault?'FAULT: motion disabled':s.moving?'Moving and correcting':'Ready';$("status").className='status '+(s.fault?'danger':'');history.push(s);if(history.length>120)history.shift();draw() }catch(e){$("status").textContent='Disconnected';}}
+function draw(){const c=$("chart"),x=c.getContext('2d'),w=c.width=c.clientWidth*devicePixelRatio,h=c.height=c.clientHeight*devicePixelRatio;x.clearRect(0,0,w,h);if(history.length<2)return;const scale=v=>h-(v/360)*h;[['actual','#71e0b0'],['target','#78a8ff']].forEach(([k,col])=>{x.strokeStyle=col;x.beginPath();history.forEach((s,i)=>{const px=i*w/120,py=scale(s[k]);i?x.lineTo(px,py):x.moveTo(px,py)});x.stroke()})}setInterval(refresh,250);refresh();
+</script></body></html>

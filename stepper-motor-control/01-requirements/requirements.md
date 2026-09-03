@@ -33,3 +33,5 @@ Requirements are separated into confirmed requirements from the course brief and
 The phrase “arc-second range” is recorded as a project goal from the course brief. It must not yet be treated as a demonstrated performance result. The final report should state the measured performance, test conditions, uncertainty, and limitations.
 
 For this project, resolution, precision, accuracy, and repeatability will be tracked separately. A system may have a small commanded increment (resolution) without reaching the requested physical angle (accuracy) or reaching it consistently across trials (repeatability).
+
+Closed-loop feedback is expected to improve error correction, but it does not imply a particular accuracy without specifying the encoder, mechanics, controller, and test method. Direct-drive performance must be estimated from the encoder and then verified experimentally.

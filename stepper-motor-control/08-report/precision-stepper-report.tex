@@ -29,6 +29,8 @@ The system combines a microcontroller, motor driver, NEMA 17 stepper motor, rota
 
 The initial scope includes component selection, electrical integration, open-loop motion generation, closed-loop control, noise analysis, calibration, and independent precision validation. Cloud connectivity, field deployment, and a final choice between PI, PID, FOC, or another controller are outside the initial scope.
 
+The 100-arcsecond strict goal is considered achievable in principle with a 0.9-degree motor, output-side encoder, deterministic closed-loop control, and a mechanically stable direct-drive or low-error fixed-ratio arrangement. The approximately 10-arcsecond result is a substantially harder stretch goal requiring smaller measurement uncertainty and control of backlash, compliance, runout, thermal drift, and encoder error. Learned pulse correction may reduce repeatable residual error, but it cannot compensate reliably for an unstable or unobservable mechanical transmission.
+
 \section{Requirements and Definitions}
 
 \begin{table}[ht]
@@ -94,6 +96,14 @@ For a 0.9-degree motor at 32 microsteps,
 
 Therefore, a 0.9-degree motor at 32 microsteps and direct drive is a plausible closed-loop baseline for the 100-arcsecond requirement, but it has almost no nominal resolution margin. The encoder and controller can correct measured target-to-shaft error, but cannot eliminate encoder quantization, measurement error, motor torque limits, current-control error, noise, settling error, or mechanical disturbances.
 
+Closed-loop feedback is especially useful for direct drive and repeatable same-direction errors. It does not automatically remove gearbox backlash. During a direction reversal, the motor can move through the gearbox lost-motion gap while the output encoder sees little or no output movement. The controller can continue commanding motion until the gap is taken up, but the resulting direction-dependent hysteresis remains part of the bidirectional accuracy result.
+
+Backlash can nevertheless be handled algorithmically when it is stable and observable. Candidate methods include fixed-direction approach control, a calibrated backlash take-up routine after reversal, a transmission-state estimator, a positive/negative hysteresis map, controlled preload or dither, and adaptive compensation. The initial controller should use directional approach plus measured take-up, then compare uncompensated and compensated results. Compensation is not assumed valid until it is tested across direction, load, temperature, and time; a changing clearance cannot be removed reliably by a fixed correction.
+
+The encoder also permits small corrective pulse bursts near the target. The controller can issue a burst, wait for the output response, and decide whether another burst is required. This can help search through a backlash or friction dead zone, but a nominal microstep is not guaranteed to move the output. An ML or adaptive model may predict pulse-burst size, backlash take-up, or periodic feed-forward correction from angle, direction, reversal history, encoder error, temperature, and load. It must remain a supervisory layer above a deterministic controller with pulse, current, position, and temperature limits. ML-assisted results must be reported separately from baseline-controller results and validated on unseen directions, loads, temperatures, and gearbox states.
+
+The first learned model should predict a bounded residual correction rather than the complete motor command. Possible outputs are an additional micro-pulse count, a backlash take-up pulse count, a feed-forward correction, and a confidence value. An interpretable lookup table or small regression model should be tested before a neural network. Training labels should come from the correction that reduces independently measured final-shaft error, rather than simply reproducing encoder error. This reduces the risk of learning sensor noise or controller behaviour without improving physical accuracy.
+
 A 2:1 reduction with the same 0.9-degree motor gives approximately 50.625 arc-seconds per nominal command. This creates useful margin below 100 arc-seconds. A 20:1 reduction with a 1.8-degree motor gives approximately 10.125 arc-seconds nominally, but the extra transmission stages and their errors may be more damaging than the resolution benefit. These calculations follow the general step/reduction relationship, while informal numerical examples must be independently recalculated before use \cite{cloudynights}.
 
 The encoder must also be checked independently:
@@ -139,6 +149,8 @@ CVT & Variable speed/ratio. & Slip or ratio uncertainty, changing compliance, ac
 \end{table}
 
 The first mechanical prototype should use either direct drive for the baseline or a single fixed synchronous belt stage for a reduced-drive comparison. Multiple reduction stages should be avoided initially because each stage adds tolerance, compliance, and error sources.
+
+CAD will be used to parameterize the planetary or belt geometry, verify tooth compatibility, check interference and packaging, define encoder datums, and represent mechanical clearances. It will not be treated as proof of arc-second performance. Printed parts are suitable for packaging and functional tests, while precision claims require a rigid bearing-supported assembly, appropriate manufactured components, output-side encoder feedback, and independent measurement.
 
 \section{Component Decisions}
 

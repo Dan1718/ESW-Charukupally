@@ -93,6 +93,60 @@ For each supplied resource, record:
 - Independent angular measurement instrument
 - Wiring, connectors, and interface components
 
+## Basic Prototype Components
+
+These are the supporting items needed to assemble and test the first breadboard or benchtop prototype. They are not the precision-critical components themselves, but they are required for safe experimentation.
+
+### Interconnection
+
+- Solderless breadboard(s), preferably with adequate current and physical space
+- Male-to-male, male-to-female, and female-to-female jumper wires
+- Flexible stranded wire for motor and power connections
+- Screw terminals or pluggable terminal blocks
+- Dupont connector housings and crimp pins, if required by the selected boards
+- Header pins and breakout boards for the encoder and driver
+- Cable ties, labels, and heat-shrink tubing
+
+### Power and Protection
+
+- Bench DC power supply with adjustable current limit
+- Appropriate DC power cable and connector
+- Inline fuse or resettable fuse for the motor supply
+- Separate regulated logic supply if the selected components require it
+- Bulk electrolytic capacitor near the motor-driver supply input
+- Ceramic bypass capacitors near logic and encoder supply pins
+- Common ground connection between the microcontroller, driver logic, and encoder, unless the final interface is intentionally isolated
+- Emergency power-disconnect or easily accessible bench switch
+
+### Debugging and Measurement
+
+- Digital multimeter
+- Oscilloscope and probes
+- Logic analyzer, if available, for step, direction, enable, and encoder signals
+- Current measurement method, such as a supply readout or current probe
+- Tachometer or other basic speed reference, if required during characterization
+- Ruler, calipers, or simple alignment tools for the initial mechanical setup
+
+### Mechanical Prototype Items
+
+- Rigid baseplate or optical breadboard-style mounting surface
+- Motor bracket for the NEMA 17
+- Encoder bracket or adjustable mount
+- Shaft coupler compatible with the encoder and output shaft
+- Pulleys, timing belt, gears, or gearbox, depending on the selected transmission
+- Bearings or supports for the final output shaft
+- Spacers, washers, screws, nuts, and standoffs
+- Mechanical stops or guards where unexpected rotation could damage the setup
+
+### Handling and Safety
+
+- Insulated screwdriver set
+- Safety glasses for bench testing
+- Heat-resistant surface or adequate ventilation around the driver
+- Spare wires, connectors, and fuses
+
+The breadboard should be used for low-current logic and signal connections. Motor phase current and high-current motor-supply paths should use suitable wires and screw terminals rather than relying on solderless breadboard contacts.
+
 ## Important Compatibility Checks
 
 - Motor phase current versus driver current range

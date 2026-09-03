@@ -18,7 +18,8 @@ This directory contains the executable and analysis code for the stepper-motor p
 ├── analysis/
 │   ├── data-processing
 │   ├── plotting
-│   └── error-analysis
+│   ├── error-analysis
+│   └── transmission_simulation.py
 ├── libraries/
 └── tests/
 ```
@@ -33,4 +34,4 @@ This directory contains the executable and analysis code for the stepper-motor p
 
 ## Current Status
 
-No code has been written yet. Component selection and hardware inventory are the first implementation dependencies.
+The initial dependency-free transmission error-budget simulation is available at `analysis/transmission_simulation.py`. Component selection and hardware inventory remain the first implementation dependencies for replacing its illustrative parameters with measured values.

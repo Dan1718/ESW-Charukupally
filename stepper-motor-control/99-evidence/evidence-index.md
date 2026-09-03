@@ -46,6 +46,7 @@ Every external resource used in the project should be linked from the relevant d
 - iFuture Technology: `03-exploration/component-selection/resource-review.md`, for the preliminary TTB6600 candidate specifications only.
 - Arduino pulley discussion: `03-exploration/component-selection/README.md` and local pulley evidence under `99-evidence/resources/arduino-pulley-diagram/`.
 - Cloudy Nights: `02-background/precision-and-resolution.md`, for the informal resolution-calculation example and its limitations.
+- Additional Cloudy Nights discussions: `02-background/cloudy-nights-related-discussions.md`, as a selectable resource index for gearing, belts, harmonic drives, encoders, backlash, and practical stepper systems.
 - ThomasNet and Texas Instruments: not yet used for technical claims because retrieval/review is incomplete.
 
 No project-specific hardware evidence has been added yet.

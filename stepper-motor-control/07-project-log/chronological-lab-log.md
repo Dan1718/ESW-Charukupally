@@ -24,6 +24,7 @@ This log records what happened in chronological order. Detailed technical reason
 - Confirmed that design decisions should be documented within the relevant topic rather than in a separate generic decision log.
 - Added the lifecycle-based project structure and documentation rules to `project-context.md`.
 - Confirmed that future discussion should be recorded as requirements, decisions, rationale, alternatives, tradeoffs, experiments, open questions, or project history wherever applicable.
+- Identified the basic bench-prototype support requirements: breadboards, jumper wires, motor/power wiring, screw terminals, current-limited supply, protection components, mechanical mounting hardware, and measurement/debugging equipment.
 
 ## Next Entry
 
